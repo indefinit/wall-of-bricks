@@ -6,6 +6,8 @@ var pos;
 var bricks = [];
 var brickRows = 10, brickCols = 10;
 var radialDistance = 350;
+var targetzs = [];
+var zs = [];
 
 function Brick(){
   var position = null;
@@ -26,6 +28,11 @@ function setup() {
 
   for (var i = 0; i < (brickRows * brickCols); i++) {
     bricks.push(new Brick());
+  }
+  
+  for (var i=0; i<brickRows*brickCols; i++) {
+    zs[i] = 0;
+    targetzs[i] = 0;
   }
 
 }
@@ -66,17 +73,15 @@ function draw() {
       if (distFromMouse < 1.0){
           pos.z -= (distFromMouse * radialDistance * 0.75);
       }
+      var ind = i*brickCols+j;
+      targetzs[ind] = pos.z;
+      zs[ind] += (targetzs[ind] - zs[ind])*0.08;
 
       translate( pos.x,
-        pos.y, //0);
-        pos.z);
+        pos.y,
+        zs[ind]);
       
-      var rotAngle = gaze(mouseY, mouseX, createVector(pos.x, pos.y, pos.z));
-      
-      //rotateX(rotAngle.x);
-      //rotateY(rotAngle.y);
-      //rotate(radians(gaze(mouseX, mouseY, pos)), [1,1,1]);
-      // ambientMaterial(255,0,255);
+      var rotAngle = gaze(mouseY, mouseX, createVector(pos.x, pos.y, zs[ind]));
       specularMaterial(0,0,255);
       box(boxWidth, boxWidth,  400);
       pop();
